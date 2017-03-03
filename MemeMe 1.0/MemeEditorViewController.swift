@@ -8,12 +8,16 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let topTextFieldDelegate = TopTextFieldDelegate()
     let bottomTextFieldDelegate = BottomTextFieldDelegate()
     
     @IBOutlet var imagePickerView: UIImageView!
+    
+    
+    @IBOutlet var addButton: UIBarButtonItem!
+
     
     @IBOutlet var cameraButton: UIBarButtonItem!
     
@@ -29,21 +33,26 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     let memeTextAttributes: [String: Any] = [NSStrokeColorAttributeName: UIColor.black, NSForegroundColorAttributeName: UIColor.white, NSFontAttributeName: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!, NSStrokeWidthAttributeName: -3.0 ]
     
+    func customizeTextField(textField: UITextField, defaultText: String) {
+        let memeTextAttributes:[String:Any] = [
+            NSStrokeColorAttributeName: UIColor.black,
+            NSForegroundColorAttributeName: UIColor.white,
+            NSFontAttributeName: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
+            NSStrokeWidthAttributeName: -3
+        ]
+        
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.text = defaultText
+        textField.textAlignment = .center
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // setting default text for text fields
-        topTextField.text = "TOP"
-        bottomTextField.text = "BOTTOM"
-        
-        // Setting additional attributes to text fields
-        topTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.defaultTextAttributes = memeTextAttributes
-        
-        // Incorporating delegates for the text fields
+        customizeTextField(textField: topTextField, defaultText: "TOP")
+        customizeTextField(textField: bottomTextField, defaultText: "BOTTOM")
         topTextField.delegate = topTextFieldDelegate
         bottomTextField.delegate = bottomTextFieldDelegate
-        
         shareButton.isEnabled = false
 
     }
@@ -51,11 +60,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        
-        // Aligning text to be center
-        topTextField.textAlignment = .center
-        bottomTextField.textAlignment = .center
-        
         subscribeToKeyboardNotifications()
     }
 
@@ -64,27 +68,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         unSubscribeToKeyboardNotifications()
     }
     
+
     @IBAction func pickAnImage(_ sender: Any) {
-        
+        guard let button = sender as? UIBarButtonItem else {
+            return
+        }
         let pickerController = UIImagePickerController()
         pickerController.delegate = self
-        pickerController.sourceType = .photoLibrary
+        if button == self.addButton {
+            pickerController.sourceType = .photoLibrary
+        } else if button == self.cameraButton {
+            pickerController.sourceType = .camera
+        }
         present(pickerController, animated: true, completion: nil)
-        
+    
     }
-    
-    
-    @IBAction func pickAnImageFromCamera(_ sender: Any) {
-        
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = .camera
-        present(imagePicker, animated: true, completion: nil)
-    }
-    
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        print("image picker")
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imagePickerView.image = image
             topTextField.text = "TOP"
@@ -96,13 +96,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("image picker cancelled")
         dismiss(animated: true, completion: nil)
     }
     
     
     @IBAction func cancelMemeEditor(_ sender: Any) {
-        print("meme editor cancelled")
         imagePickerView.image = nil
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
@@ -125,7 +123,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //Helper fuctions to subscribe to keyboardWillShow notifications
     func keyboardWillShow(_notification: Notification) {
         if bottomTextField.isEditing {
-        view.frame.origin.y -= getKeyboardHeight(_notification)
+        view.frame.origin.y = -getKeyboardHeight(_notification)
         }
     }
     
@@ -169,7 +167,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         controller.completionWithItemsHandler = { (activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
             if completed == true {
                 self.save()
-                print("Saved")
             }
         }
         self.present(controller, animated: true, completion: nil)
