@@ -25,17 +25,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBOutlet var topToolBar: UIToolbar!
     
+    @IBOutlet var shareButton: UIBarButtonItem!
+    
     let memeTextAttributes: [String: Any] = [NSStrokeColorAttributeName: UIColor.black, NSForegroundColorAttributeName: UIColor.white, NSFontAttributeName: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!, NSStrokeWidthAttributeName: -3.0 ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // setting default text for text fields
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
-        
-        // Aligning text to be center
-        topTextField.textAlignment = NSTextAlignment.center
-        bottomTextField.textAlignment = .center
         
         // Setting additional attributes to text fields
         topTextField.defaultTextAttributes = memeTextAttributes
@@ -44,12 +43,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Incorporating delegates for the text fields
         topTextField.delegate = topTextFieldDelegate
         bottomTextField.delegate = bottomTextFieldDelegate
+        
+        shareButton.isEnabled = false
 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        
+        // Aligning text to be center
+        topTextField.textAlignment = .center
+        bottomTextField.textAlignment = .center
+        
         subscribeToKeyboardNotifications()
     }
 
@@ -83,6 +89,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imagePickerView.image = image
             topTextField.text = "TOP"
             bottomTextField.text = "BOTTOM"
+            shareButton.isEnabled = true            
         }
         dismiss(animated: true, completion: nil)
     }
@@ -99,6 +106,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePickerView.image = nil
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
+        shareButton.isEnabled = false
         dismiss(animated: true, completion: nil)
     }
     

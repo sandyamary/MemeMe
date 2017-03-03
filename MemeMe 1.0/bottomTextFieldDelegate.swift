@@ -12,6 +12,7 @@ import UIKit
 class BottomTextFieldDelegate: NSObject, UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.textAlignment = .center
         if textField.text == "BOTTOM" {
             textField.text = ""
         }

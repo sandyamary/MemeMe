@@ -102,6 +102,7 @@
                         <outlet property="cameraButton" destination="4Zn-dT-03U" id="KVv-lR-XOT"/>
                         <outlet property="imagePickerView" destination="kEW-wq-jZ7" id="pCV-tc-IdE"/>
                         <outlet property="memeToolBar" destination="mAN-Aa-Xce" id="az4-qC-Df2"/>
+                        <outlet property="shareButton" destination="wbO-tY-o0M" id="QqV-iN-xyr"/>
                         <outlet property="topTextField" destination="SVH-2V-d8d" id="M8m-rh-fnG"/>
                         <outlet property="topToolBar" destination="8Nc-Kb-327" id="FAO-i9-Bak"/>
                     </connections>

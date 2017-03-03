@@ -12,6 +12,7 @@ import UIKit
 class TopTextFieldDelegate: NSObject, UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.textAlignment = .center
         if textField.text == "TOP" {
             textField.text = ""
         }
