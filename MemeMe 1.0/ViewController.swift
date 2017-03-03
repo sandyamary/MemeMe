@@ -44,7 +44,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Incorporating delegates for the text fields
         topTextField.delegate = topTextFieldDelegate
         bottomTextField.delegate = bottomTextFieldDelegate
-    
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,7 +52,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         subscribeToKeyboardNotifications()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         unSubscribeToKeyboardNotifications()
@@ -102,20 +102,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         dismiss(animated: true, completion: nil)
     }
     
+    
     func subscribeToKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_notification:)), name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_notification:)), name: .UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_notification:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_notification:)), name: .UIKeyboardWillHide, object: nil)
     }
     
     func unSubscribeToKeyboardNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow , object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide , object: nil)
     }
     
     
     //Helper fuctions to subscribe to keyboardWillShow notifications
     func keyboardWillShow(_notification: Notification) {
+        if bottomTextField.isEditing {
         view.frame.origin.y -= getKeyboardHeight(_notification)
+        }
     }
     
     func getKeyboardHeight(_ notification:Notification) -> CGFloat {
@@ -126,8 +129,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     //Helper fuctions to subscribe to keyboardWillHide notifications
     func keyboardWillHide(_notification: Notification) {
-        view.frame.origin.y += getKeyboardHeight(_notification)
+        view.frame.origin.y = 0
     }
+    
     
     func generatedMemedImage() -> UIImage {
         
