@@ -56,7 +56,7 @@
                     <navigationItem key="navigationItem" title="Sent Memes" id="8cy-kX-Kqj">
                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="4yQ-sp-yPZ">
                             <connections>
-                                <segue destination="BYZ-38-t0r" kind="show" id="fc7-mJ-Xmw"/>
+                                <segue destination="BYZ-38-t0r" kind="presentation" id="fc7-mJ-Xmw"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -149,7 +149,7 @@
                     <navigationItem key="navigationItem" title="Sent Memes" id="SZW-7c-hDZ">
                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="JLs-OV-UqQ">
                             <connections>
-                                <segue destination="BYZ-38-t0r" kind="show" id="CIe-z4-HM6"/>
+                                <segue destination="BYZ-38-t0r" kind="presentation" id="CIe-z4-HM6"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

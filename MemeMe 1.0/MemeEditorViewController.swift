@@ -109,7 +109,12 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
         shareButton.isEnabled = false
-        self.navigationController?.popToRootViewController(animated: true)
+        
+        if let nav = self.navigationController {
+            nav.popToRootViewController(animated: true)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     
