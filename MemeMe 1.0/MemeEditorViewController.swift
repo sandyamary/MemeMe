@@ -60,11 +60,14 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        self.tabBarController?.tabBar.isHidden = true
         subscribeToKeyboardNotifications()
+        
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
         unSubscribeToKeyboardNotifications()
     }
     
@@ -85,6 +88,7 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        picker.delegate = self
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imagePickerView.image = image
             topTextField.text = "TOP"
@@ -105,7 +109,7 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
         shareButton.isEnabled = false
-        dismiss(animated: true, completion: nil)
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
     
@@ -167,17 +171,19 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         controller.completionWithItemsHandler = { (activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
             if completed == true {
                 self.save()
+                self.navigationController?.popToRootViewController(animated: true)
             }
         }
-        self.present(controller, animated: true, completion: nil)
-        
+        self.present(controller, animated: true, completion: nil)        
     }
     
     
     //function to save the meme
     func save() {
-        let _ = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imagePickerView.image!, memedImage: generatedMemedImage())
+        let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imagePickerView.image!, memedImage: generatedMemedImage())
+        let appDelegateObject = UIApplication.shared.delegate as! AppDelegate
+        appDelegateObject.memes.append(meme)
+        print(appDelegateObject.memes.count)
     }
-
 }
 
